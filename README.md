@@ -96,9 +96,9 @@ To use this project, you will need the following dependencies:
 
 To rebuild the MongoDB database with Docker, ensure you have [Docker](https://docs.docker.com/get-docker/) installed and running, then create a `docker-compose.yml` file in the root of the project with the following content:
 
-     ```bash
+```sh
      docker-compose up -d
-     ```
+```
 
 # Usage
 
