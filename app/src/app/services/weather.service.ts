@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../environments/environment';
 
 @Injectable()
 export class WeatherService {
-  private baseUrl: string = 'http://localhost:3000/weather';
+  private baseUrl: string = environment.apiUrl + '/weather';
 
   constructor(private http: HttpClient) {}
 
