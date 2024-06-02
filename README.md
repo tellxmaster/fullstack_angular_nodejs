@@ -16,6 +16,7 @@ To use this project, you will need the following dependencies:
 - [Angular](https://github.com/angular/angular) version 17.3.5
 - [Docker](https://docs.docker.com/get-docker/) version 26.0.0
 - [MongoDBCompass](https://www.mongodb.com/products/tools/compass) version 1.43.0
+- [VisualCrossing Weather API](https://www.visualcrossing.com/weather-api)
 
 ## Installation
 
@@ -31,6 +32,8 @@ First replace the API_KEY sent in the mail in the `docker-compose.yml` file:
       WEATHER_API_KEY: { API-KEY }
       MONGODB_URI: mongodb://admin:password@mongodb:27017/weather?authSource=admin
 ```
+
+> **Note:** 📧 The API key is sent to you via email. Please check your email for the API key. 📧
 
 Then run the command to build image:
 
@@ -82,11 +85,13 @@ Once the image is built, you can access both the backend of the application at [
 
   Open the .env file and add the necessary variables:
 
-  ```
+  ```env
   WEATHER_API_URL=https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/
-  WEATHER_API_KEY={API-KEY-VISUAL-CROSSING} (Attached in the email)
+  WEATHER_API_KEY={API-KEY}
   MONGODB_URI=mongodb://admin:password@localhost:27017/weather?authSource=admin
   ```
+
+  > **Note:** 📧 The API key is sent to you via email. Please check your email for the API key. 📧
 
   Save and close the file.
 
