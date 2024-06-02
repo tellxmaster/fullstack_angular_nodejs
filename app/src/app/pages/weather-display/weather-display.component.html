@@ -1,14 +1,24 @@
 <div class="container mt-5" *ngIf="weatherData; else loading">
         <!-- Data View-->
+        <div class="my-4">
+                <h2 class="d-inline-block mb-0">SkyPulse 🌤️</h2>
+                <span class="badge bg-primary fs-6">Alpha v1.0</span>
+        </div>
         <div class="fade show card bg-light ">
                 <div class="card-body">
                         <div class="row">
                                 <div class="col-lg-4 d-flex flex-column align-items-center justify-content-center">
                                         <app-weather-icon class="mb-3"
                                                 [weatherType]="weatherData?.currentConditions?.icon || weatherData.dailySummaries[0]?.icon"></app-weather-icon>
+
                                         <h1 class="display-1">{{ weatherData.currentConditions.temperature ||
                                                 weatherData.dailySummaries[0]?.maxTemp }}°C</h1>
-                                        <p>Feels like {{ weatherData.currentConditions.feelsLike || 'N/A' }}</p>
+
+                                        <p class="text-center">
+                                                {{ weatherData.resolvedAddress }}
+                                                <br>
+                                                Feels like {{ weatherData.currentConditions.feelsLike || 'N/A' }}
+                                        </p>
                                 </div>
                                 <div class="col-lg-8">
                                         <h2>

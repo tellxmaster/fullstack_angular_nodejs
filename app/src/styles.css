@@ -14,7 +14,7 @@ body {
 }
 
 .backdrop {
-  position: fixed; /* Posiciona el backdrop relativamente a la ventana del navegador */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -42,4 +42,15 @@ body {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.github-badge .btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+}
+
+.github-badge .btn img {
+  margin-right: 0.5rem;
 }

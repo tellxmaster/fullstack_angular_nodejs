@@ -42,6 +42,7 @@ export class WeatherService {
     const finalEndDate = endDate ? this.resolveDate(endDate) : startDate;
 
     const query = {
+      address: location,
       period: startDate.toDateString(),
       endDate: finalEndDate.toDateString(),
     };
