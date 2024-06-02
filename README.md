@@ -126,7 +126,3 @@ ng serve
 ```
 
 Once both servers are running and the database is set up, you can access the Angular application through a web browser at [http://localhost:4200](http://localhost:4200).
-
-```
-
-```
