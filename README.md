@@ -17,7 +17,7 @@ To use this project, you will need the following dependencies:
 - [Nest](https://github.com/nestjs/nest) version 10.3.2
 - [Angular](https://github.com/angular/angular) version 17.3.5
 - [Docker](https://docs.docker.com/get-docker/) version 26.0.0
-- [MongoDBCompass]() version 1.43.0
+- [MongoDBCompass](https://www.mongodb.com/products/tools/compass) version 1.43.0
 
 ## Installation
 
