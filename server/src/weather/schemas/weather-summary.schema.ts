@@ -7,6 +7,12 @@ export class WeatherSummary extends Document {
   date: Date;
 
   @Prop()
+  period: string;
+
+  @Prop()
+  endDate: string;
+
+  @Prop()
   latitude: number;
 
   @Prop()

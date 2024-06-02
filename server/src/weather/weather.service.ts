@@ -38,25 +38,19 @@ export class WeatherService {
     period: string,
     endDate: string,
   ): Promise<any> {
+    const startDate = this.resolveDate(period);
+    const finalEndDate = endDate ? this.resolveDate(endDate) : startDate;
+
     const query = {
-      date: new Date().toDateString(),
-      address: location,
+      period: startDate.toDateString(),
+      endDate: finalEndDate.toDateString(),
     };
     // Find if a register exists for the current date and location
     const cachedData = await this.weatherSummaryModel.findOne(query);
 
-    // Return cached data if it exists and is not older than 24 hours
-    if (cachedData) {
-      const currentTime = new Date();
-      const cachedTime = new Date(cachedData.date);
-      const timeDifference = Math.abs(
-        currentTime.getTime() - cachedTime.getTime(),
-      );
-      const hoursDifference = Math.floor(timeDifference / (1000 * 60 * 60));
-
-      if (hoursDifference <= 24) {
-        return cachedData;
-      }
+    // Return cached data if it exists and check the period of caching
+    if (cachedData && this.isDataValid(cachedData.date, 24)) {
+      return cachedData;
     }
 
     // Build the URL for the weather API request based on the provided parameters
@@ -69,7 +63,11 @@ export class WeatherService {
     // Fetch the weather data from the API and save it to the database
     try {
       const response = await axios.get(url);
-      const filteredData = this.filterData(response.data);
+      const filteredData = this.filterData(
+        response.data,
+        startDate.toDateString(),
+        finalEndDate.toDateString(),
+      );
       const newRecord = new this.weatherSummaryModel(filteredData);
       await newRecord.save();
       return filteredData;
@@ -80,13 +78,52 @@ export class WeatherService {
   }
 
   /**
+   * Resolves a date string to a Date object.
+   * @param dateStr - The date string to resolve.
+   * @returns The resolved Date object.
+   */
+  private resolveDate(dateStr: string): Date {
+    console.log(dateStr);
+    if (dateStr === 'today') {
+      return new Date();
+    } else if (dateStr === 'tomorrow') {
+      let date = new Date();
+      date.setDate(date.getDate() + 1);
+      return date;
+    } else if (dateStr === 'yesterday') {
+      let date = new Date();
+      date.setDate(date.getDate() - 1);
+      return date;
+    } else {
+      return new Date(dateStr);
+    }
+  }
+
+  /**
+   * Checks if the cached data is still valid based on the specified time period.
+   * @param cachedDate - The date when the data was cached.
+   * @param hoursValid - The number of hours the data is considered valid.
+   * @returns True if the data is still valid, false otherwise.
+   */
+  private isDataValid(cachedDate: Date, hoursValid: number): boolean {
+    const currentTime = new Date();
+    const timeDifference = Math.abs(
+      currentTime.getTime() - cachedDate.getTime(),
+    );
+    const hoursDifference = Math.floor(timeDifference / (1000 * 60 * 60));
+    return hoursDifference <= hoursValid;
+  }
+
+  /**
    * Filters the retrieved weather data to extract relevant information.
    * @param data - The raw weather data to filter.
    * @returns The filtered weather data.
    */
-  private filterData(data: any): any {
+  private filterData(data: any, period: string, endDate: string): any {
     return {
       date: new Date().toDateString(),
+      period: period,
+      endDate: endDate,
       latitude: data.latitude || null,
       longitude: data.longitude || null,
       resolvedAddress: data.resolvedAddress || null,

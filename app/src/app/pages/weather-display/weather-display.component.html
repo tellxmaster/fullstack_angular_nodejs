@@ -139,7 +139,7 @@
 
 
 
-<ng-template #loading>
+<ng-template [ngIf]="isLoading" #loading>
         <div class="backdrop">
                 <div class="loader"><img src="/assets/images/loader.png" width="30px"></div>
         </div>
