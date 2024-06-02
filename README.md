@@ -96,13 +96,29 @@ To use this project, you will need the following dependencies:
 
 To rebuild the MongoDB database with Docker, ensure you have [Docker](https://docs.docker.com/get-docker/) installed and running, then create a `docker-compose.yml` file in the root of the project with the following content:
 
-## Contributing
+     ```bash
+     docker-compose up -d
+     ```
 
-Explain how others can contribute to the project. Include guidelines for submitting pull requests and reporting issues.
+# Usage
 
-## License
+### Start the NestJS Server
 
-Specify the license under which the project is distributed.
+From the server directory, start the server using:
+
+```sh
+npm run start
+```
+
+### Start the Angular Application
+
+Open another terminal, navigate to the app directory and execute:
+
+```sh
+ng serve
+```
+
+Once both servers are running and the database is set up, you can access the Angular application through a web browser at [http://localhost:4200](http://localhost:4200).
 
 ```
 
