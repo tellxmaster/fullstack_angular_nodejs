@@ -3,7 +3,7 @@ conn = new Mongo();
 
 // Conectar a la base de datos admin para autenticarse
 db = conn.getDB("admin");
-db.auth("admin", "password"); // Reemplaza 'admin' y 'password' con tus credenciales reales
+db.auth("admin", "password"); 
 
 // Una vez autenticados, seleccionar la base de datos específica
 db = conn.getDB("weather");

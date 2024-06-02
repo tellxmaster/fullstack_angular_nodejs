@@ -10,6 +10,7 @@ export class LocationService {
   private baseUrl: string = environment.apiUrl + '/locations';
 
   constructor(private http: HttpClient) {}
+
   getCities(): Observable<any> {
     return this.http.get(`${this.baseUrl}`);
   }

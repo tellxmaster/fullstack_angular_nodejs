@@ -7,8 +7,6 @@ Keeps you connected to the latest weather updates. Plan your week or step out co
 - [Utilities](#utilities)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Utilities
 
@@ -20,6 +18,29 @@ To use this project, you will need the following dependencies:
 - [MongoDBCompass](https://www.mongodb.com/products/tools/compass) version 1.43.0
 
 ## Installation
+
+### Via Docker
+
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+
+First replace the API_KEY sent in the mail in the `docker-compose.yml` file:
+
+```docker
+ environment:
+      WEATHER_API_URL: https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/
+      WEATHER_API_KEY: { API-KEY }
+      MONGODB_URI: mongodb://admin:password@mongodb:27017/weather?authSource=admin
+```
+
+Then run the command to build image:
+
+```sh
+docker-compose up --build
+```
+
+Once the image is built, you can access both the backend of the application at [http://localhost:80](http://localhost:80) and the back at [http://localhost:3000](http://localhost:3000).
+
+### Manual
 
 1. Clone the Repository
 
@@ -39,45 +60,58 @@ To use this project, you will need the following dependencies:
 
    Before starting the services, you need to set up the necessary environment variables for both the server and the Angular application.
 
-   - Create .env File for the NestJS Server:
+- Change to server directory
 
-     ```bash
-     cd server
-     touch .env
-     ```
+  ```bash
+  cd server
+  ```
 
-     Open the .env file and add the necessary variables:
+- Create .env File for the NestJS Server:
 
-     ```
-     WEATHER_API_URL=https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/
-     WEATHER_API_KEY={API-KEY-VISUAL-CROSSING} (Attached in the email)
-     MONGODB_URI=mongodb://admin:password@localhost:27017/weather?authSource=admin
-     ```
+  ### Linux
 
-     Save and close the file.
+  ```bash
+  touch .env
+  ```
 
-   - (Optional) Configure Environment Variables for Angular:
+  ### Windows
 
-     If Angular requires environment variables during build time, follow these steps:
+  ```powershell
+  type nul > .env
+  ```
 
-     Return to the main directory and navigate to the Angular directory:
+  Open the .env file and add the necessary variables:
 
-     ```bash
-     cd ../app
-     ```
+  ```
+  WEATHER_API_URL=https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/
+  WEATHER_API_KEY={API-KEY-VISUAL-CROSSING} (Attached in the email)
+  MONGODB_URI=mongodb://admin:password@localhost:27017/weather?authSource=admin
+  ```
 
-     Within this directory, locate or create an environment configuration file, typically found in `src/environments/environment.prod.ts` for production or `src/environments/environment.ts` for development.
+  Save and close the file.
 
-     Add the necessary variables, for example:
+  - (Optional) Configure Environment Variables for Angular:
 
-     ```ts
-     export const environment = {
-       production: false,
-       apiUrl: "http://localhost:3000",
-     };
-     ```
+    If Angular requires environment variables during build time, follow these steps:
 
-     Save and close the file.
+    Return to the main directory and navigate to the Angular directory:
+
+    ```bash
+    cd ../app
+    ```
+
+    Within this directory, locate or create an environment configuration file, typically found in `src/environments/environment.prod.ts` for production or `src/environments/environment.ts` for development.
+
+    Add the necessary variables, for example:
+
+    ```ts
+    export const environment = {
+      production: false,
+      apiUrl: "http://localhost:3000",
+    };
+    ```
+
+    Save and close the file.
 
 3. Install Dependencies
 
@@ -95,10 +129,32 @@ To use this project, you will need the following dependencies:
 
 ## Docker Configuration for MongoDB Database
 
-To rebuild the MongoDB database with Docker, ensure you have [Docker](https://docs.docker.com/get-docker/) installed and running, then create a `docker-compose.yml` file in the root of the project with the following content:
+To rebuild the MongoDB database with Docker, ensure you have [Docker](https://docs.docker.com/get-docker/) installed and running, then replace the content of `docker-compose.yml` file in the root of the project with the following content:
+
+```docker
+version: "4.4"
+
+services:
+  mongodb:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data:/data/db
+      - ./init-mongo:/docker-entrypoint-initdb.d
+
+volumes:
+  mongodb_data:
+    driver: local
+```
+
+Execute the command in the root folder of the `fullstack_angular_nodejs/project`
 
 ```sh
-     docker-compose up -d
+docker-compose up -d
 ```
 
 Test Mongo connection with Compass or mongosh with this conection string
