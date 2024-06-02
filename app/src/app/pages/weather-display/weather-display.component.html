@@ -1,0 +1,146 @@
+<div class="container mt-5" *ngIf="weatherData; else loading">
+        <!-- Data View-->
+        <div class="fade show card bg-light ">
+                <div class="card-body">
+                        <div class="row">
+                                <div class="col-lg-4 d-flex flex-column align-items-center justify-content-center">
+                                        <app-weather-icon class="mb-3"
+                                                [weatherType]="weatherData?.currentConditions?.icon || weatherData.dailySummaries[0]?.icon"></app-weather-icon>
+                                        <h1 class="display-1">{{ weatherData.currentConditions.temperature ||
+                                                weatherData.dailySummaries[0]?.maxTemp }}°C</h1>
+                                        <p>Feels like {{ weatherData.currentConditions.feelsLike || 'N/A' }}</p>
+                                </div>
+                                <div class="col-lg-8">
+                                        <h2>
+                                                {{ weatherData.currentConditions.conditions ||
+                                                weatherData.dailySummaries[0]?.conditions }}
+                                                <small>{{ weatherData.dailySummaries[0]?.date | date: 'longDate'
+                                                        }}</small>
+                                        </h2>
+                                        <div class="row">
+                                                <div class="col-md-6">
+                                                        <p><strong>High:</strong> {{
+                                                                weatherData.dailySummaries[0]?.maxTemp }}°C</p>
+                                                        <p><strong>Low:</strong> {{
+                                                                weatherData.dailySummaries[0]?.minTemp }}°C</p>
+                                                        <p><strong>Humidity:</strong> {{
+                                                                weatherData.currentConditions.humidity || 'N/A' }}%</p>
+                                                        <p><strong>Precipitation Probability:</strong> {{
+                                                                weatherData.dailySummaries[0]?.precipitationProbability
+                                                                }}%</p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                        <p><strong>Wind:</strong> {{
+                                                                weatherData.currentConditions.windSpeed || 'N/A' }}
+                                                                km/h, {{ weatherData.currentConditions.windDirection ||
+                                                                'N/A' }}°</p>
+                                                        <p><strong>UV Index:</strong> {{ weatherData.tzoffset }}</p>
+                                                        <p><strong>Wind Direction:</strong> {{
+                                                                weatherData.currentConditions.windDirection || 'N/A' }}
+                                                        </p>
+                                                        <p><strong>Coords:</strong> {{ weatherData.latitude }}°, {{
+                                                                weatherData.longitude }}°</p>
+                                                </div>
+                                        </div>
+                                        <blockquote class="mt-3">{{ weatherData.description ||
+                                                weatherData.dailySummaries[0]?.description }}</blockquote>
+                                </div>
+                        </div>
+                </div>
+        </div>
+        <!-- Controls View-->
+        <div class="row align-items-start">
+                <div class="col-fixed">
+                        <div class="mt-5 mt-md-3">
+
+                                <select class="form-select uniform-input" id="locationSelect"
+                                        [(ngModel)]="selectedLocation" name="location">
+                                        <option *ngFor="let location of locations">{{ location.name }}</option>
+                                </select>
+                                <label for="locationSelect" class="form-label">Location</label>
+                        </div>
+                </div>
+                <div class="col-fixed">
+                        <div class="mt-3">
+                                <select class="form-select uniform-input" id="periodSelect" [(ngModel)]="selectedPeriod"
+                                        name="period" (change)="onPeriodChange()">
+                                        <option value="today">Today</option>
+                                        <option value="tomorrow">Tomorrow</option>
+                                        <option value="yesterday">Yesterday</option>
+                                        <option value="specificDate">Specific Date</option>
+                                        <option value="dateRange">Date Range</option>
+                                </select>
+                                <label for="periodSelect" class="form-label">Period</label>
+                        </div>
+                </div>
+                <div class="col-fixed" *ngIf="selectedPeriod === 'specificDate' || selectedPeriod === 'dateRange'">
+                        <div class="mt-3">
+
+                                <input type="date" class="form-control uniform-input" id="startDate"
+                                        [(ngModel)]="startDate" [min]="minDate" [max]="maxDate"
+                                        (ngModelChange)="onStartDateChange()">
+                                <label for="startDate" class="form-label">Date</label>
+                        </div>
+                </div>
+                <div class="col-fixed" *ngIf="selectedPeriod === 'dateRange'">
+                        <div class="mt-3">
+
+                                <input type="date" class="form-control uniform-input" id="endDateRange"
+                                        [(ngModel)]="endDateRange" [min]="minEndDate" [max]="maxDate">
+                                <label for="endDateRange" class="form-label">End Date</label>
+                        </div>
+                </div>
+                <div class="col-fixed mt-3 mb-5">
+                        <button class="btn btn-primary uniform-input" (click)="fetchWeatherData()">Get Weather</button>
+                </div>
+        </div>
+
+        <div class="container mt-5" *ngIf="weatherData?.dailySummaries?.length > 1">
+                <div class="card bg-light">
+                        <h4 class="p-4">Daily Weather Summary</h4>
+                        <div class="card-body">
+                                <table class="table">
+                                        <thead>
+                                                <tr>
+                                                        <th scope="col">Date</th>
+                                                        <th scope="col">Icon</th>
+                                                        <th scope="col">Max Temp</th>
+                                                        <th scope="col">Min Temp</th>
+                                                        <th scope="col">Conditions</th>
+                                                        <th scope="col">Description</th>
+                                                        <th scope="col">Precip Prob</th>
+                                                </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr *ngFor="let summary of weatherData.dailySummaries">
+                                                        <td>{{ summary.date | date: 'mediumDate' }}</td>
+
+                                                        <td>
+                                                                <app-weather-icon class="mb-3"
+                                                                        [weatherType]="summary.icon"
+                                                                        [size]="'30px'"></app-weather-icon>
+                                                        </td>
+                                                        <td>{{ summary.maxTemp }}°C</td>
+                                                        <td>{{ summary.minTemp }}°C</td>
+                                                        <td>{{ summary.conditions }}</td>
+                                                        <td><small>{{ summary.description || "N/A"}}</small></td>
+                                                        <td>{{ (summary.precipitationProbability ||
+                                                                summary.precipitationProbability === 0 ?
+                                                                summary.precipitationProbability + "%" : "N/A") }}</td>
+
+                                                </tr>
+                                        </tbody>
+                                </table>
+                        </div>
+                </div>
+        </div>
+
+</div>
+
+
+
+<ng-template #loading>
+        <div class="backdrop">
+                <div class="loader"><img src="/assets/images/loader.png" width="30px"></div>
+        </div>
+</ng-template>
