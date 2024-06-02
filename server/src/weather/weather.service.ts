@@ -39,7 +39,7 @@ export class WeatherService {
     endDate: string,
   ): Promise<any> {
     const query = {
-      date: new Date().toLocaleDateString(),
+      date: new Date().toDateString(),
       address: location,
     };
     // Find if a register exists for the current date and location
@@ -86,7 +86,7 @@ export class WeatherService {
    */
   private filterData(data: any): any {
     return {
-      date: new Date().toLocaleDateString(),
+      date: new Date().toDateString(),
       latitude: data.latitude || null,
       longitude: data.longitude || null,
       resolvedAddress: data.resolvedAddress || null,
